@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useDispatch } from 'react-redux'
+import { addBlog } from '@/lib/features/blogs/blogsSlice'
 
 export default function CreateForm() {
 
     const router = useRouter()
+    const dispatch = useDispatch()
 
     const [title,setTitle] = useState('')
     const [blogbody,setBlogbody] = useState('')
@@ -15,24 +18,17 @@ export default function CreateForm() {
     const newBlog = {title,blogbody,author,newfile}
 
     const handleSubmit = async (e)=>{
+        // const newBlog = {title,blogbody,author,newfile}
+
+
         console.log(newBlog)
         e.preventDefault()
         setIsLoading(true)
-
-        const res = await fetch('http://localhost:4000/blogs',{
-            method:'post',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify(newBlog)
-        })
-
-        if (res.status ===201){
-            router.refresh()
-            router.push('/blogs')
-        }
-
-        // setIsLoading(false)
+        dispatch(addBlog(newBlog))
+        setIsLoading(false)
+        // router.refresh()
+        router.push('/blogs')
     }
-
     
 
 
