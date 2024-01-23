@@ -25,6 +25,8 @@ export default function CreateForm() {
         e.preventDefault()
         setIsLoading(true)
         dispatch(addBlog(newBlog))
+        //could also use this
+        // dispatch({ type: 'todos/add_blog', blog: newBlog })
         setIsLoading(false)
         // router.refresh()
         router.push('/blogs')

@@ -7,6 +7,7 @@ export default function BlogDetails() {
   const router = useRouter();
   const {id} = router.query
   const blogId = parseInt(id)
+  
 
 
   const blog = useSelector(state => {
@@ -15,12 +16,12 @@ export default function BlogDetails() {
   });
   console.log(blog)
   const dispatch = useDispatch()
-  const delBlogId = blog.id
+  // const delBlogId = blog.id
   console.log(deleteBlog)
 
   const handleDelete = () => {
     console.log('deleted!')
-    dispatch(deleteBlog(delBlogId));
+    dispatch(deleteBlog(blogId));
     console.log('deleted!!!!')
 
     router.push('/blogs');
@@ -29,11 +30,15 @@ export default function BlogDetails() {
   };
   return (
     <div className="blog-details">
-      <article>
+      {blog &&
+
+        <article>
         <h2>{ blog.title }</h2>
         <p>Written by { blog.author }</p>
         <div>{ blog.body }</div>
-      </article>
+        </article>
+      }
+
       <button onClick={handleDelete}>delete blog</button>
     </div>
   );

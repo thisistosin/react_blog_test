@@ -1,50 +1,35 @@
-// 'use client'
-import { useSelector,shallowEqual } from "react-redux";
+'use client'
+import { useSelector,shallowEqual,useDispatch } from "react-redux";
+import { useEffect } from "react";
 import BlogListItems from "./bloglistitems";
 import { useRouter } from "next/router";
-
-
-console.log('hi')
-
-
-// export default function BlogList() {
-//     const blogs = useSelector(state => state.blogs)
-//     console.log(blogs)
-//     const renderedBlogListItems = blogs.blogs.map(blog=>{
-//         return <BlogListItems key = {blog.id} blog={blog}/>
-//     })
-
-//     return (
-//         <div className='blog-list'>
-//             {renderedBlogListItems}
-//         </div>
-//      )
-// }
-
-//Changing one blog object means creating copies of both the blog and the 
-//state.blogs array, and each copy is a new reference in memory.
-//When useSelector sees a new reference as its result, 
-//it forces its component to re-render.
-//So, any time one todo object is updated 
-//the whole <BlogList> parent component will re-render
-
-//Refactored Part 1 - By Selecting Data in List Items by ID
+import { fetchBlogs } from "@/lib/features/blogs/blogsSlice";
 
 const selectBlogIds = state => state.blogs.blogs.map(blog => blog.id)
 
+let renderedBlogListItems
+
 export default function BlogList() {
     const router = useRouter()
-
-
-    // const blogIds = useSelector(selectBlogIds)
-
-    //refactored to disallow re-render
+    const dispatch = useDispatch()
+    const blogStatus = useSelector(state=>state.blogs.status)
     const blogIds = useSelector(selectBlogIds,shallowEqual)
 
+    useEffect(() => {
+        if (blogStatus === 'idle') {
+            dispatch(fetchBlogs())
+        }
+      }, [blogStatus, dispatch])
+    
+    if (blogStatus === 'succeeded'){
 
-    const renderedBlogListItems = blogIds.map(blogId=>{
-        return <BlogListItems key = {blogId} id={blogId}/>
-    })
+        renderedBlogListItems = blogIds.map(blogId=>{
+            return <BlogListItems key = {blogId} id={blogId}/>
+        })
+
+    }
+
+
 
     return (
         <div className='blog-list'>
