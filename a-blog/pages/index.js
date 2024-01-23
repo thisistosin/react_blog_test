@@ -8,8 +8,6 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-  console.log(store.getState())
-  // store.dispatch({ type: 'blogs/add_blog', payload: 'Learn about actions' })
   return (
     <>
       <Head>

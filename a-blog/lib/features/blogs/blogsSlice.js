@@ -1,4 +1,5 @@
 import { createSlice,nanoid,createAsyncThunk } from "@reduxjs/toolkit"
+import { createSelector } from "@reduxjs/toolkit"
 
 
 const initialState = {
@@ -42,6 +43,10 @@ const blogsSlice = createSlice({
           state.status = 'failed'
           state.error = action.error.message
         })
+        .addCase(addNewBlog.fulfilled, (state, action) => {
+          // We can directly add the new blog object to our posts array
+          state.blogs.push(action.payload)
+        })
     }
 
   })
@@ -51,8 +56,10 @@ const blogsSlice = createSlice({
 
   export const selectAllBlogs = state=>{state.blogs}
   export const selectBlogById = (state,blogId)=>{
-    state.blogs.find(blog=>blog.id ===blogId)
+    return state.blogs.blogs.find(blog=>blog.id ===blogId)
   }
+  export const selectBlogIds = createSelector(state => state.blogs.blogs,blogs=>blogs.map(blog => blog.id)) 
+
 
   export const fetchBlogs = createAsyncThunk('blogs/fetchBlogs',async()=>{
     const res = await fetch('http://localhost:4100/blogs')
@@ -60,3 +67,18 @@ const blogsSlice = createSlice({
     console.log(data)
     return data
   })
+
+  export const addNewBlog = createAsyncThunk(
+    'posts/addNewBlog',
+    // The payload creator receives the partial `{title, content, user}` object
+    async initialBlog => {
+      // We send the initial data to the fake API server
+      const res = await fetch('http://localhost:4100/blogs',{
+            method:'post',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(initialBlog)
+        })
+      // The response includes the complete post object, including unique ID
+      return res
+    }
+  )

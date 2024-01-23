@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux'
-import { addBlog } from '@/lib/features/blogs/blogsSlice'
+// import { blogAdded } from '@/lib/features/blogs/blogsSlice'
+import { addNewBlog } from '@/lib/features/blogs/blogsSlice'
+import { nanoid } from '@reduxjs/toolkit'
 
 export default function CreateForm() {
 
@@ -15,18 +17,18 @@ export default function CreateForm() {
     const [isLoading,setIsLoading] = useState(false)
     // const img = ''
 
-    const newBlog = {title,blogbody,author,newfile}
+    const newBlog = {title,blogbody,author,newfile,id:nanoid()}
 
     const handleSubmit = async (e)=>{
         // const newBlog = {title,blogbody,author,newfile}
 
 
-        console.log(newBlog)
+        console.log(addNewBlog)
         e.preventDefault()
         setIsLoading(true)
-        dispatch(addBlog(newBlog))
+        dispatch(addNewBlog(newBlog))
         //could also use this
-        // dispatch({ type: 'todos/add_blog', blog: newBlog })
+        // dispatch({ type: 'blogs/add_blog', blog: newBlog })
         setIsLoading(false)
         // router.refresh()
         router.push('/blogs')

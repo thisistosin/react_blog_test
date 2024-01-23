@@ -1,11 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useSelector } from "react-redux"
-
-
-const selectBlogById = (state, blogId) => {
-  return state.blogs.blogs.find(blog => blog.id === blogId)
-}
+import { selectBlogById } from "@/lib/features/blogs/blogsSlice"
 
 export default function BlogListItems({id}) {
 
